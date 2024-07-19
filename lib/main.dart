@@ -1,21 +1,19 @@
-import 'dart:async';
-import 'package:http/http.dart' as http;
+class Quote {
+  final String content;
+  final String author;
 
-Future<String> fetchQuote() async {
-  final response = await http.get(Uri.parse('https://api.quotable.io/random'));
+  Quote({required this.content, required this.author});
 
-  if (response.statusCode == 200) {
-    return response.body;
-  } else {
-    throw Exception('Failed to load quote');
+  @override
+  String toString() {
+    return '"$content" - $author';
   }
 }
 
-void main() async {
-  try {
-    String quote = await fetchQuote();
-    print(quote);
-  } catch (e) {
-    print('Error: $e');
-  }
+void main() {
+  var quote1 = Quote(content: "Мудрость - это знание, переданное через опыт.", author: "Платон");
+  var quote2 = Quote(content: "Жизнь - это то, что с вами происходит, пока вы заняты другими планами.", author: "Джон Леннон");
+
+  print(quote1); // Вывод: "Мудрость - это знание, переданное через опыт." - Платон
+  print(quote2); // Вывод: "Жизнь - это то, что с вами происходит, пока вы заняты другими планами." - Джон Леннон
 }
