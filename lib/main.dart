@@ -1,3 +1,17 @@
+import 'dart:async';
+import 'dart:convert'; // Добавьте этот импорт для работы с JSON
+import 'package:http/http.dart' as http;
+
+Future<Map<String, dynamic>> fetchQuote() async {
+  final response = await http.get(Uri.parse('https://api.quotable.io/random'));
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body); // Декодируем JSON-ответ
+  } else {
+    throw Exception('Failed to load quote');
+  }
+}
+
 class Quote {
   final String content;
   final String author;
@@ -10,10 +24,17 @@ class Quote {
   }
 }
 
-void main() {
-  var quote1 = Quote(content: "Мудрость - это знание, переданное через опыт.", author: "Платон");
-  var quote2 = Quote(content: "Жизнь - это то, что с вами происходит, пока вы заняты другими планами.", author: "Джон Леннон");
+void main() async {
+  try {
+    Map<String, dynamic> quote = await fetchQuote();
+    // Выбираем определенные элементы из JSON-ответа
+    String content = quote['content'];
+    String author = quote['author'];
 
-  print(quote1); // Вывод: "Мудрость - это знание, переданное через опыт." - Платон
-  print(quote2); // Вывод: "Жизнь - это то, что с вами происходит, пока вы заняты другими планами." - Джон Леннон
+    var quote1 = Quote(content: content, author: author);
+
+    print(quote1);
+  } catch (e) {
+    print('Error: $e');
+  }
 }
